@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 interface FormSkeletonProps {
-  className?: string
+  className?: string;
 }
 
 export function FormSkeleton({ className }: FormSkeletonProps) {
@@ -9,37 +9,37 @@ export function FormSkeleton({ className }: FormSkeletonProps) {
     <div className={cn("space-y-4", className)}>
       {/* Text Input Skeleton */}
       <div className="space-y-2">
-        <div className="h-3 bg-gray-200 rounded w-24 animate-pulse"></div>
-        <div className="h-8 bg-gray-100 rounded-lg border-2 border-dashed border-gray-200"></div>
+        <div className="h-3 w-24 animate-pulse rounded bg-gray-200"></div>
+        <div className="h-8 rounded-lg border-2 border-dashed border-gray-200 bg-gray-100"></div>
       </div>
 
       {/* Select Dropdown Skeleton */}
       <div className="space-y-2">
-        <div className="h-3 bg-gray-200 rounded w-32 animate-pulse"></div>
-        <div className="h-8 bg-gray-100 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-between px-3">
-          <div className="h-3 bg-gray-200 rounded w-20 animate-pulse"></div>
-          <div className="h-3 w-3 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-3 w-32 animate-pulse rounded bg-gray-200"></div>
+        <div className="flex h-8 items-center justify-between rounded-lg border-2 border-dashed border-gray-200 bg-gray-100 px-3">
+          <div className="h-3 w-20 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-3 w-3 animate-pulse rounded bg-gray-200"></div>
         </div>
       </div>
 
       {/* Textarea Skeleton */}
       <div className="space-y-2">
-        <div className="h-3 bg-gray-200 rounded w-28 animate-pulse"></div>
-        <div className="h-16 bg-gray-100 rounded-lg border-2 border-dashed border-gray-200"></div>
+        <div className="h-3 w-28 animate-pulse rounded bg-gray-200"></div>
+        <div className="h-16 rounded-lg border-2 border-dashed border-gray-200 bg-gray-100"></div>
       </div>
 
       {/* Radio Group Skeleton */}
       <div className="space-y-2">
-        <div className="h-3 bg-gray-200 rounded w-36 animate-pulse"></div>
+        <div className="h-3 w-36 animate-pulse rounded bg-gray-200"></div>
         <div className="space-y-1.5">
           {[1, 2].map((i) => (
             <div key={i} className="flex items-center space-x-2">
-              <div className="h-3 w-3 bg-gray-200 rounded-full animate-pulse"></div>
-              <div className="h-3 bg-gray-200 rounded w-16 animate-pulse"></div>
+              <div className="h-3 w-3 animate-pulse rounded-full bg-gray-200"></div>
+              <div className="h-3 w-16 animate-pulse rounded bg-gray-200"></div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

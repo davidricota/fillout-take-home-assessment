@@ -53,14 +53,16 @@ export function ContextMenu({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-0 p-0 opacity-0 group-hover:opacity-100 group-hover:w-6 group-hover:px-1 data-[active=true]:opacity-100 data-[active=true]:w-6 data-[active=true]:px-1 transition-all duration-200 ease-out overflow-hidden"
+            className="h-6 w-0 overflow-hidden p-0 opacity-0 transition-all duration-200 ease-out group-hover:w-6 group-hover:px-1 group-hover:opacity-100 data-[active=true]:w-6 data-[active=true]:px-1 data-[active=true]:opacity-100"
             data-active={isActive}
           >
             <MoreHorizontal className="h-3 w-3 flex-shrink-0" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" className="w-48 -translate-y-2">
-          <div className="px-2 py-1.5 text-sm font-medium text-gray-900 bg-">Settings</div>
+          <div className="bg- px-2 py-1.5 text-sm font-medium text-gray-900">
+            Settings
+          </div>
           <DropdownMenuSeparator />
           {!isFixed && (
             <DropdownMenuItem onClick={() => onSetAsFirst(pageId)}>
