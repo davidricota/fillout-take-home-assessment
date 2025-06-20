@@ -10,17 +10,18 @@ export default function Home() {
   const activePage = pages.find((page) => page.id === activePageId);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col pb-24">
+    <div className="flex h-screen min-h-screen flex-col bg-gray-50">
       {/* Main Content Area */}
-      <FormPageContent
-        pageTitle={activePage?.name || "Form Page"}
-        pageId={activePageId}
-        pageIcon={activePage?.icon || "document"}
-      />
-
+      <div className="flex-1 overflow-y-auto">
+        <FormPageContent
+          pageTitle={activePage?.name || "Form Page"}
+          pageId={activePageId}
+          pageIcon={activePage?.icon || "document"}
+        />
+      </div>
       {/* Bottom Navigation */}
-      <div className="w-full border-t border-gray-200 bg-white fixed bottom-0">
-        <div className="container mx-auto">
+      <div className="w-full border-t border-gray-200 bg-white">
+        <div className="container">
           <FormBuilderNavbar />
         </div>
       </div>

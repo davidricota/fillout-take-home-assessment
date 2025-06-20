@@ -10,6 +10,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      container: {
+        padding: {
+          DEFAULT: "1rem",
+          sm: "2rem",
+          lg: "4rem",
+        },
+        center: true,
+      },
       boxShadow: {
         soft: "0px 1px 1px 0px rgba(0, 0, 0, 0.02), 0px 1px 3px 0px rgba(0, 0, 0, 0.04)",
       },

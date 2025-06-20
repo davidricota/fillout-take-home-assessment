@@ -19,12 +19,12 @@ export function PageIcon({ type, className, isActive }: PageIconProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center  rounded-full transition-colors",
-        isActive ? " text-icon-active" : " text-icon-inactive",
-        className
+        "flex items-center justify-center rounded-full transition-colors",
+        isActive ? "text-icon-active" : "text-icon-inactive",
+        className,
       )}
     >
-      <Icon className="w-5 h-5" />
+      <Icon className="h-5 w-5" />
     </div>
   );
 }

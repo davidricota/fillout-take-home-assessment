@@ -19,7 +19,7 @@ export function useFormBuilder() {
       prev.map((page) => ({
         ...page,
         isActive: page.id === pageId,
-      }))
+      })),
     );
   }, []);
 
@@ -41,7 +41,7 @@ export function useFormBuilder() {
         return newPages;
       });
     },
-    [pages.length]
+    [pages.length],
   );
 
   const reorderPages = useCallback((startIndex: number, endIndex: number) => {
@@ -93,7 +93,9 @@ export function useFormBuilder() {
   }, []);
 
   const renamePage = useCallback((pageId: string, newName: string) => {
-    setPages((prev) => prev.map((p) => (p.id === pageId ? { ...p, name: newName } : p)));
+    setPages((prev) =>
+      prev.map((p) => (p.id === pageId ? { ...p, name: newName } : p)),
+    );
   }, []);
 
   const handleSetAsFirst = useCallback((pageId: string) => {
