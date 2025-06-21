@@ -89,7 +89,7 @@ export function FormBuilderNavbar() {
         <Droppable droppableId="navbar" direction="horizontal">
           {(provided) => (
             <div
-              className={`scrollbar-hide flex max-w-[calc(100%-theme(spacing.50))] items-center overflow-x-scroll transition-all duration-200`}
+              className={`scrollbar-hide flex max-w-[calc(100%-theme(spacing.36))] items-center overflow-x-scroll transition-all duration-200`}
               ref={(el) => {
                 scrollRef.current = el;
                 provided.innerRef(el);
@@ -120,14 +120,14 @@ export function FormBuilderNavbar() {
             <>
               <button
                 onClick={scrollLeft}
-                className="btn-scroll navbar-constants left-0"
+                className="btn-scroll navbar-constants"
               >
                 <ChevronLeft className="navbar-icon text-gray-600" />
               </button>
 
               <button
                 onClick={scrollRight}
-                className="btn-scroll navbar-constants right-[theme(spacing.36)]"
+                className="btn-scroll navbar-constants"
               >
                 <ChevronRight className="navbar-icon text-gray-600" />
               </button>
