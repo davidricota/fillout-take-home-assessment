@@ -21,7 +21,7 @@ export function AddPageButton({
         className={cn("btn-add-page-standalone navbar-constants", className)}
       >
         <Plus className="navbar-icon" />
-        Add page
+        <span className="hidden md:block">Add page</span>
       </button>
     );
   }
