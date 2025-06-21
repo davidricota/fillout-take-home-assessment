@@ -14,19 +14,19 @@ interface FormPageContentProps {
 const pageConfigs = {
   info: {
     description: "Collect basic information from users",
-    fields: ["Full Name", "Email Address", "Phone Number"],
+    fields: ["Full Name", "Email Address"],
     color: "orange",
     icon: Info,
   },
   document: {
     description: "Gather detailed information and documents",
-    fields: ["Upload Document", "Additional Details", "Comments"],
+    fields: ["Upload Document", "Additional Details"],
     color: "blue",
     icon: FileText,
   },
   check: {
     description: "Final confirmation and review",
-    fields: ["Terms & Conditions", "Final Review", "Submit"],
+    fields: ["Terms & Conditions", "Submit"],
     color: "green",
     icon: Check,
   },

@@ -7,12 +7,6 @@ interface FormSkeletonProps {
 export function FormSkeleton({ className }: FormSkeletonProps) {
   return (
     <div className={cn("space-y-4", className)}>
-      {/* Text Input Skeleton */}
-      <div className="space-y-2">
-        <div className="h-3 w-24 animate-pulse rounded bg-gray-200"></div>
-        <div className="h-8 rounded-lg border-2 border-dashed border-gray-200 bg-gray-100"></div>
-      </div>
-
       {/* Select Dropdown Skeleton */}
       <div className="space-y-2">
         <div className="h-3 w-32 animate-pulse rounded bg-gray-200"></div>
