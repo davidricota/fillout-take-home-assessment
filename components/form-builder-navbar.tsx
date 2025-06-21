@@ -30,11 +30,11 @@ export function FormBuilderNavbar() {
   }
 
   const scrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: -150, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    scrollRef.current?.scrollBy({ left: 150, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" });
   };
 
   const updateScrollButtons = () => {
@@ -86,21 +86,10 @@ export function FormBuilderNavbar() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="relative z-10 flex w-fit max-w-full gap-4 py-5 before:absolute before:bottom-0 before:left-0 before:top-1/2 before:-z-10 before:h-px before:w-full before:border-b before:border-dashed before:border-[#C0C0C0] before:content-['']">
-        {isOverflowing && canScrollLeft && (
-          <button
-            onClick={scrollLeft}
-            className="absolute left-0 top-1/2 z-20 -translate-y-1/2 rounded-lg bg-white p-2 shadow-md transition-colors hover:bg-gray-50"
-          >
-            <ChevronLeft className="h-4 w-4 text-gray-600" />
-          </button>
-        )}
-
         <Droppable droppableId="navbar" direction="horizontal">
           {(provided) => (
             <div
-              className={`scrollbar-hide flex max-w-[calc(100%-theme(spacing.36))] items-center overflow-x-scroll transition-all duration-200 ${
-                isOverflowing && canScrollLeft ? "pl-10" : ""
-              } ${isOverflowing && canScrollRight ? "pr-10" : ""}`}
+              className={`scrollbar-hide flex max-w-[calc(100%-theme(spacing.50))] items-center overflow-x-scroll transition-all duration-200`}
               ref={(el) => {
                 scrollRef.current = el;
                 provided.innerRef(el);
@@ -126,20 +115,30 @@ export function FormBuilderNavbar() {
             </div>
           )}
         </Droppable>
+        <div className="w-50 flex gap-2">
+          {isOverflowing && (
+            <>
+              <button
+                onClick={scrollLeft}
+                className="btn-scroll navbar-constants left-0"
+              >
+                <ChevronLeft className="navbar-icon text-gray-600" />
+              </button>
 
-        {isOverflowing && canScrollRight && (
-          <button
-            onClick={scrollRight}
-            className="absolute right-[theme(spacing.36)] top-1/2 z-20 -translate-y-1/2 rounded-lg bg-white p-2 shadow-md transition-colors hover:bg-gray-50"
-          >
-            <ChevronRight className="h-4 w-4 text-gray-600" />
-          </button>
-        )}
+              <button
+                onClick={scrollRight}
+                className="btn-scroll navbar-constants right-[theme(spacing.36)]"
+              >
+                <ChevronRight className="navbar-icon text-gray-600" />
+              </button>
+            </>
+          )}
 
-        <AddPageButton
-          onAdd={() => addPage(pages.length - 1)}
-          variant="standalone"
-        />
+          <AddPageButton
+            onAdd={() => addPage(pages.length - 1)}
+            variant="standalone"
+          />
+        </div>
       </div>
     </DragDropContext>
   );

@@ -9,8 +9,15 @@ export default function Home() {
 
   const activePage = pages.find((page) => page.id === activePageId);
 
+  console.log(
+    "Page component - activePageId:",
+    activePageId,
+    "activePage:",
+    activePage?.name,
+  );
+
   return (
-    <div className="flex h-screen min-h-screen flex-col bg-gray-50">
+    <div className="bg-gray-25 flex h-screen min-h-screen flex-col">
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto">
         <FormPageContent
@@ -20,7 +27,7 @@ export default function Home() {
         />
       </div>
       {/* Bottom Navigation */}
-      <div className="w-full border-t border-gray-200 bg-white">
+      <div className="bg-navbar w-full border-t border-gray-200">
         <div className="container">
           <FormBuilderNavbar />
         </div>

@@ -5,9 +5,15 @@ interface PageIconProps {
   type: "info" | "document" | "check";
   className?: string;
   isActive?: boolean;
+  isFocused?: boolean;
 }
 
-export function PageIcon({ type, className, isActive }: PageIconProps) {
+export function PageIcon({
+  type,
+  className,
+  isActive,
+  isFocused,
+}: PageIconProps) {
   const iconMap = {
     info: Info,
     document: FileText,
@@ -19,12 +25,12 @@ export function PageIcon({ type, className, isActive }: PageIconProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full transition-colors",
-        isActive ? "text-icon-active" : "text-icon-inactive",
+        "page-icon-container",
+        isActive || isFocused ? "icon-active" : "icon-default",
         className,
       )}
     >
-      <Icon className="h-5 w-5" />
+      <Icon className="navbar-icon" />
     </div>
   );
 }
