@@ -9,13 +9,6 @@ export default function Home() {
 
   const activePage = pages.find((page) => page.id === activePageId);
 
-  console.log(
-    "Page component - activePageId:",
-    activePageId,
-    "activePage:",
-    activePage?.name,
-  );
-
   return (
     <div className="bg-gray-25 flex h-screen min-h-screen flex-col">
       {/* Main Content Area */}

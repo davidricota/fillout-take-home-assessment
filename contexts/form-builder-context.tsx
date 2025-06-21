@@ -9,6 +9,10 @@ import {
 } from "react";
 import type { FormPage } from "@/types/form-builder";
 
+/**
+ * Interface defining the form builder context API
+ * Provides methods to manage form pages and their state
+ */
 interface FormBuilderContextType {
   pages: FormPage[];
   activePageId: string;
@@ -21,11 +25,18 @@ interface FormBuilderContextType {
   handleSetAsFirst: (pageId: string) => void;
 }
 
+/**
+ * Internal state structure for the form builder
+ */
 interface FormBuilderState {
   pages: FormPage[];
   activePageId: string;
 }
 
+/**
+ * Action types for the form builder reducer
+ * Each action represents a specific operation on the form pages
+ */
 type FormBuilderAction =
   | { type: "SET_ACTIVE_PAGE"; payload: string }
   | { type: "ADD_PAGE"; payload: { afterIndex: number } }
@@ -39,6 +50,10 @@ const FormBuilderContext = createContext<FormBuilderContextType | undefined>(
   undefined,
 );
 
+/**
+ * Initial state with default form pages
+ * Includes fixed pages (Info and Ending) that cannot be deleted or reordered
+ */
 const initialState: FormBuilderState = {
   pages: [
     { id: "1", name: "Info", icon: "info", isActive: true, isFixed: true },
@@ -49,30 +64,20 @@ const initialState: FormBuilderState = {
   activePageId: "1",
 };
 
+/**
+ * Reducer function that handles all form builder state changes
+ * Manages page operations like adding, deleting, reordering, and updating pages
+ */
 function formBuilderReducer(
   state: FormBuilderState,
   action: FormBuilderAction,
 ): FormBuilderState {
-  console.log("Reducer called with action:", action.type, action.payload);
-  console.log("Current state:", {
-    activePageId: state.activePageId,
-    pagesCount: state.pages.length,
-  });
-
   switch (action.type) {
     case "SET_ACTIVE_PAGE": {
-      console.log("SET_ACTIVE_PAGE: setting to", action.payload);
-      console.log(
-        "Current pages:",
-        state.pages.map((p) => p.id),
-      );
-
-      // Verificar que la página existe antes de activarla
+      // Verify that the page exists before activating it
       const pageExists = state.pages.some((page) => page.id === action.payload);
-      console.log("Page exists check:", pageExists);
 
       if (!pageExists) {
-        console.log("SET_ACTIVE_PAGE: page does not exist, ignoring");
         return state;
       }
 
@@ -101,17 +106,11 @@ function formBuilderReducer(
       const newPages = [...state.pages];
       newPages.splice(insertIndex + 1, 0, newPage);
 
-      // Actualizar todas las páginas para que solo la nueva sea activa
+      // Update all pages so only the new one is active
       const updatedPages = newPages.map((page) => ({
         ...page,
         isActive: page.id === newPage.id,
       }));
-
-      console.log("ADD_PAGE: created new page", {
-        newPageId: newPage.id,
-        newPageName: newPage.name,
-        insertIndex: insertIndex + 1,
-      });
 
       return {
         activePageId: newPage.id,
@@ -121,6 +120,7 @@ function formBuilderReducer(
 
     case "REORDER_PAGES": {
       const { startIndex, endIndex } = action.payload;
+      // Prevent reordering of fixed pages (first and last)
       if (startIndex === 0 || startIndex === state.pages.length - 1)
         return state;
       if (endIndex === 0 || endIndex === state.pages.length - 1) return state;
@@ -140,6 +140,7 @@ function formBuilderReducer(
       if (pageIndex === -1) return state;
 
       const originalPage = state.pages[pageIndex];
+      // Prevent duplication of fixed pages
       if (originalPage.isFixed) return state;
 
       const duplicatedPage: FormPage = {
@@ -153,18 +154,11 @@ function formBuilderReducer(
       const insertIndex = Math.min(pageIndex + 1, newPages.length - 1);
       newPages.splice(insertIndex, 0, duplicatedPage);
 
-      // Actualizar todas las páginas para que solo la duplicada sea activa
+      // Update all pages so only the duplicated one is active
       const updatedPages = newPages.map((page) => ({
         ...page,
         isActive: page.id === duplicatedPage.id,
       }));
-
-      console.log("DUPLICATE_PAGE: created duplicate page", {
-        originalPageId: action.payload,
-        newPageId: duplicatedPage.id,
-        newPageName: duplicatedPage.name,
-        insertIndex,
-      });
 
       return {
         activePageId: duplicatedPage.id,
@@ -174,75 +168,49 @@ function formBuilderReducer(
 
     case "DELETE_PAGE": {
       const page = state.pages.find((p) => p.id === action.payload);
+      // Prevent deletion of fixed pages
       if (page?.isFixed) return state;
 
       const pageIndex = state.pages.findIndex((p) => p.id === action.payload);
       const isActivePage = action.payload === state.activePageId;
 
-      console.log("DeletePage Debug:", {
-        pageId: action.payload,
-        pageIndex,
-        isActivePage,
-        activePageId: state.activePageId,
-        totalPages: state.pages.length,
-      });
-
-      // Filtrar la página a eliminar
+      // Filter out the page to be deleted
       const newPages = state.pages.filter((p) => p.id !== action.payload);
 
-      // Si se eliminó la página activa, activar la página anterior
+      // If the active page was deleted, activate the previous page
       if (isActivePage && newPages.length > 0) {
         let newActiveIndex;
 
-        // Si era la última página, activar la penúltima
+        // If it was the last page, activate the second to last
         if (pageIndex === state.pages.length - 1) {
           newActiveIndex = newPages.length - 1;
         } else {
-          // Si no era la última, activar la anterior
+          // If it wasn't the last, activate the previous one
           newActiveIndex = Math.max(0, pageIndex - 1);
         }
 
         const newActivePage = newPages[newActiveIndex];
 
-        console.log("New active page:", {
-          newActiveIndex,
-          newActivePageId: newActivePage.id,
-          newActivePageName: newActivePage.name,
-        });
-
-        console.log("Setting activePageId to:", newActivePage.id);
-
-        // Marcar la nueva página como activa
+        // Mark the new page as active
         const updatedPages = newPages.map((p, index) => ({
           ...p,
           isActive: index === newActiveIndex,
         }));
-
-        console.log(
-          "Updated pages:",
-          updatedPages.map((p) => ({
-            id: p.id,
-            name: p.name,
-            isActive: p.isActive,
-          })),
-        );
 
         const newState = {
           activePageId: newActivePage.id,
           pages: updatedPages,
         };
 
-        console.log("DELETE_PAGE: returning new state:", newState);
         return newState;
       }
 
-      // Si no se eliminó la página activa, mantener el estado actual
+      // If the active page wasn't deleted, maintain current state
       const newState = {
         ...state,
         pages: newPages,
       };
 
-      console.log("DELETE_PAGE: returning filtered state:", newState);
       return newState;
     }
 
@@ -258,9 +226,11 @@ function formBuilderReducer(
 
     case "SET_AS_FIRST": {
       const pageIndex = state.pages.findIndex((p) => p.id === action.payload);
+      // Prevent moving pages that are already at the beginning
       if (pageIndex <= 1) return state;
 
       const page = state.pages[pageIndex];
+      // Prevent moving fixed pages
       if (page.isFixed) return state;
 
       const newPages = [...state.pages];
@@ -278,33 +248,66 @@ function formBuilderReducer(
   }
 }
 
+/**
+ * Provider component that wraps the form builder context
+ * Provides all the page management functions to child components
+ */
 export function FormBuilderProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(formBuilderReducer, initialState);
 
+  /**
+   * Sets the specified page as the active page
+   * Updates the active state of all pages accordingly
+   */
   const setActivePage = useCallback((pageId: string) => {
     dispatch({ type: "SET_ACTIVE_PAGE", payload: pageId });
   }, []);
 
+  /**
+   * Adds a new page after the specified index
+   * The new page becomes the active page automatically
+   */
   const addPage = useCallback((afterIndex: number) => {
     dispatch({ type: "ADD_PAGE", payload: { afterIndex } });
   }, []);
 
+  /**
+   * Reorders pages by moving a page from startIndex to endIndex
+   * Fixed pages (first and last) cannot be reordered
+   */
   const reorderPages = useCallback((startIndex: number, endIndex: number) => {
     dispatch({ type: "REORDER_PAGES", payload: { startIndex, endIndex } });
   }, []);
 
+  /**
+   * Creates a copy of the specified page
+   * The duplicated page becomes the active page
+   * Fixed pages cannot be duplicated
+   */
   const duplicatePage = useCallback((pageId: string) => {
     dispatch({ type: "DUPLICATE_PAGE", payload: pageId });
   }, []);
 
+  /**
+   * Deletes the specified page
+   * If the deleted page was active, activates the previous page
+   * Fixed pages cannot be deleted
+   */
   const deletePage = useCallback((pageId: string) => {
     dispatch({ type: "DELETE_PAGE", payload: pageId });
   }, []);
 
+  /**
+   * Renames the specified page with the new name
+   */
   const renamePage = useCallback((pageId: string, newName: string) => {
     dispatch({ type: "RENAME_PAGE", payload: { pageId, newName } });
   }, []);
 
+  /**
+   * Moves the specified page to the first position (after fixed pages)
+   * Fixed pages cannot be moved
+   */
   const handleSetAsFirst = useCallback((pageId: string) => {
     dispatch({ type: "SET_AS_FIRST", payload: pageId });
   }, []);
@@ -328,6 +331,11 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Hook to access the form builder context
+ * Must be used within a FormBuilderProvider
+ * Throws an error if used outside the provider
+ */
 export function useFormBuilderContext() {
   const context = useContext(FormBuilderContext);
   if (context === undefined) {
