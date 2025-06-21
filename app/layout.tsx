@@ -7,7 +7,7 @@ import { FormBuilderProvider } from "@/contexts/form-builder-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Form Builder",
+  title: "Fillout",
   description: "A powerful form builder application",
   generator: "v0.dev",
 };

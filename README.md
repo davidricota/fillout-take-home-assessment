@@ -1,4 +1,4 @@
-# Form Builder Navbar
+# Fillout
 
 A modern, interactive form builder with a dynamic navbar component built using Next.js, TypeScript, and Tailwind CSS. This project demonstrates advanced UI patterns and state management for creating multi-page forms.
 
@@ -105,7 +105,7 @@ components/ui/
 ## 📁 Project Structure
 
 ```
-form-builder-navbar/
+fillout/
 ├── app/                    # Next.js app directory
 │   ├── globals.css        # Global styles and Tailwind imports
 │   ├── layout.tsx         # Root layout component
@@ -149,7 +149,7 @@ Context provider managing the global state of the form builder.
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd form-builder-navbar
+cd fillout
 
 # Install dependencies
 pnpm install
