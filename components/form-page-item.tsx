@@ -1,6 +1,7 @@
 "use client";
 
 import { Draggable } from "@hello-pangea/dnd";
+import { useState } from "react";
 import { PageIcon } from "./page-icon";
 import { AddPageButton } from "./add-page-button";
 import { ContextMenu } from "./context-menu";
@@ -32,6 +33,8 @@ export function FormPageItem({
   onDuplicate,
   onDelete,
 }: FormPageItemProps) {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <Draggable
       draggableId={page.id}
@@ -39,24 +42,27 @@ export function FormPageItem({
       isDragDisabled={!!page.isFixed}
     >
       {(provided, snapshot) => (
-        <div className="group flex items-center">
+        <div className="navbar-constants group flex items-center">
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             className={cn(
-              "flex h-8 cursor-pointer items-center gap-2 rounded-lg bg-button-inactive px-3 text-button-text-inactive transition-all duration-200",
-              page.isActive
-                ? "bg-button-active text-button-text-active shadow-soft"
-                : "hover:bg-button-hover hover:shadow-soft focus:text-button-text-active",
+              "btn-page-item",
+              page.isActive && "active",
               snapshot.isDragging && "opacity-50",
             )}
             onClick={() => onSelect(page.id)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            tabIndex={0}
           >
-            <PageIcon type={page.icon} isActive={page.isActive} />
-            <span className="whitespace-nowrap text-sm font-medium">
-              {page.name}
-            </span>
+            <PageIcon
+              type={page.icon}
+              isActive={page.isActive}
+              isFocused={isFocused}
+            />
+            <span className="navbar-text">{page.name}</span>
             {!page.isFixed && (
               <ContextMenu
                 pageId={page.id}

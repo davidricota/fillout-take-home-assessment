@@ -53,38 +53,41 @@ export function ContextMenu({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-0 overflow-hidden p-0 opacity-0 transition-all duration-200 ease-out group-hover:w-6 group-hover:px-1 group-hover:opacity-100 data-[active=true]:w-6 data-[active=true]:px-1 data-[active=true]:opacity-100"
+            className="h-6 w-0 overflow-hidden p-0 opacity-0 transition-all duration-200 ease-out data-[active=true]:w-6 data-[active=true]:px-1 data-[active=true]:opacity-100"
             data-active={isActive}
           >
             <MoreHorizontal className="h-3 w-3 flex-shrink-0" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="w-48 -translate-y-2">
-          <div className="bg- px-2 py-1.5 text-sm font-medium text-gray-900">
+        <DropdownMenuContent align="center" className="w-48 -translate-y-2 p-0">
+          <div className="bg-card-header-title p-3 text-base font-medium text-gray-900">
             Settings
           </div>
-          <DropdownMenuSeparator />
+
           {!isFixed && (
-            <DropdownMenuItem onClick={() => onSetAsFirst(pageId)}>
-              <Flag className="mr-2 h-4 w-4 text-blue-500" />
+            <DropdownMenuItem
+              onClick={() => onSetAsFirst(pageId)}
+              className="group cursor-pointer"
+            >
+              <Flag className="mr-2 h-4 w-4 group-hover:text-blue-500" />
               Set as first page
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={handleRename}>
-            <Edit3 className="mr-2 h-4 w-4" />
+          <DropdownMenuItem
+            onClick={handleRename}
+            className="group cursor-pointer"
+          >
+            <Edit3 className="mr-2 h-4 w-4 group-hover:text-blue-500" />
             Rename
           </DropdownMenuItem>
           {!isFixed && (
-            <>
-              <DropdownMenuItem onClick={() => onDuplicate(pageId)}>
-                <Copy className="mr-2 h-4 w-4" />
-                Copy
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDuplicate(pageId)}>
-                <Files className="mr-2 h-4 w-4" />
-                Duplicate
-              </DropdownMenuItem>
-            </>
+            <DropdownMenuItem
+              onClick={() => onDuplicate(pageId)}
+              className="group cursor-pointer"
+            >
+              <Files className="mr-2 h-4 w-4 group-hover:text-blue-500" />
+              Duplicate
+            </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
           {!isFixed && (
