@@ -20,6 +20,7 @@ export function FormBuilderNavbar() {
   } = useFormBuilderContext();
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollInterval = useRef<NodeJS.Timeout | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -29,17 +30,45 @@ export function FormBuilderNavbar() {
     reorderPages(result.source.index, result.destination.index);
   }
 
-  const scrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" });
+  // Scroll helpers
+  const scrollByAmount = (amount: number) => {
+    scrollRef.current?.scrollBy({ left: amount, behavior: "smooth" });
   };
 
-  const scrollRight = () => {
-    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" });
+  const startContinuousScroll = (amount: number) => {
+    if (scrollInterval.current) return;
+    scrollInterval.current = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+
+      // Verificar si se puede scrollear más en la dirección sin exceder el 100%
+      const canScroll =
+        amount < 0
+          ? el.scrollLeft > 0
+          : el.scrollLeft + el.clientWidth < el.scrollWidth;
+
+      if (!canScroll) {
+        stopContinuousScroll();
+        return;
+      }
+      scrollByAmount(amount);
+    }, 50);
   };
+
+  const stopContinuousScroll = () => {
+    if (scrollInterval.current) {
+      clearInterval(scrollInterval.current);
+      scrollInterval.current = null;
+    }
+  };
+
+  const scrollLeft = () => scrollByAmount(-200);
+  const scrollRight = () => scrollByAmount(200);
 
   const updateScrollButtons = () => {
     const el = scrollRef.current;
     if (!el) return;
+
     setCanScrollLeft(el.scrollLeft > 0);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth);
   };
@@ -120,14 +149,30 @@ export function FormBuilderNavbar() {
             <>
               <button
                 onClick={scrollLeft}
+                onMouseDown={() => startContinuousScroll(-40)}
+                onMouseUp={stopContinuousScroll}
+                onMouseLeave={stopContinuousScroll}
+                onTouchStart={() => startContinuousScroll(-40)}
+                onTouchEnd={stopContinuousScroll}
+                onTouchCancel={stopContinuousScroll}
+                disabled={!canScrollLeft}
                 className="btn-scroll navbar-constants"
+                aria-label="Scroll left"
               >
                 <ChevronLeft className="navbar-icon text-gray-600" />
               </button>
 
               <button
                 onClick={scrollRight}
+                onMouseDown={() => startContinuousScroll(40)}
+                onMouseUp={stopContinuousScroll}
+                onMouseLeave={stopContinuousScroll}
+                onTouchStart={() => startContinuousScroll(40)}
+                onTouchEnd={stopContinuousScroll}
+                onTouchCancel={stopContinuousScroll}
+                disabled={!canScrollRight}
                 className="btn-scroll navbar-constants"
+                aria-label="Scroll right"
               >
                 <ChevronRight className="navbar-icon text-gray-600" />
               </button>
