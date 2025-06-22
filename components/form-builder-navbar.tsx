@@ -35,8 +35,46 @@ export function FormBuilderNavbar() {
     scrollRef.current?.scrollBy({ left: amount, behavior: "smooth" });
   };
 
+  const getDynamicScrollAmount = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el || pages.length === 0) return direction === "left" ? -200 : 200;
+
+    // Calcular el ancho promedio por página
+    const averagePageWidth = el.scrollWidth / pages.length;
+
+    // Scrollear 1-2 páginas dependiendo del número total
+    let pagesToScroll = 1;
+    if (pages.length > 10) pagesToScroll = 2;
+    if (pages.length > 20) pagesToScroll = 3;
+
+    let scrollAmount = averagePageWidth * pagesToScroll;
+
+    // Verificar que no exceda los límites
+    if (direction === "left") {
+      const maxScrollLeft = el.scrollLeft;
+      scrollAmount = Math.min(scrollAmount, maxScrollLeft);
+    } else {
+      const maxScrollRight = el.scrollWidth - el.clientWidth - el.scrollLeft;
+      scrollAmount = Math.min(scrollAmount, maxScrollRight);
+    }
+
+    return direction === "left" ? -scrollAmount : scrollAmount;
+  };
+
   const startContinuousScroll = (amount: number) => {
     if (scrollInterval.current) return;
+
+    // Verificar si se puede scrollear en esa dirección antes de iniciar
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const canScroll =
+      amount < 0
+        ? el.scrollLeft > 1
+        : el.scrollLeft + el.clientWidth + 1 < el.scrollWidth;
+
+    if (!canScroll) return;
+
     scrollInterval.current = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
@@ -62,15 +100,27 @@ export function FormBuilderNavbar() {
     }
   };
 
-  const scrollLeft = () => scrollByAmount(-200);
-  const scrollRight = () => scrollByAmount(200);
+  const scrollLeft = () => {
+    if (!canScrollLeft) return;
+    scrollByAmount(getDynamicScrollAmount("left"));
+  };
+
+  const scrollRight = () => {
+    if (!canScrollRight) return;
+    scrollByAmount(getDynamicScrollAmount("right"));
+  };
 
   const updateScrollButtons = () => {
     const el = scrollRef.current;
     if (!el) return;
 
-    setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth);
+    // Usar una tolerancia pequeña para evitar problemas de precisión
+    const tolerance = 1;
+
+    setCanScrollLeft(el.scrollLeft > tolerance);
+    setCanScrollRight(
+      el.scrollLeft + el.clientWidth + tolerance < el.scrollWidth,
+    );
   };
 
   const checkOverflow = () => {
@@ -97,20 +147,20 @@ export function FormBuilderNavbar() {
     checkOverflow();
     updateScrollButtons();
 
-    el.addEventListener("scroll", updateScrollButtons);
-    window.addEventListener("resize", () => {
+    const handleScroll = () => updateScrollButtons();
+    const handleResize = () => {
       checkOverflow();
       updateScrollButtons();
-    });
+    };
+
+    el.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      el.removeEventListener("scroll", updateScrollButtons);
-      window.removeEventListener("resize", () => {
-        checkOverflow();
-        updateScrollButtons();
-      });
+      el.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [pages.length]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -149,10 +199,14 @@ export function FormBuilderNavbar() {
             <>
               <button
                 onClick={scrollLeft}
-                onMouseDown={() => startContinuousScroll(-40)}
+                onMouseDown={() =>
+                  startContinuousScroll(getDynamicScrollAmount("left") / 5)
+                }
                 onMouseUp={stopContinuousScroll}
                 onMouseLeave={stopContinuousScroll}
-                onTouchStart={() => startContinuousScroll(-40)}
+                onTouchStart={() =>
+                  startContinuousScroll(getDynamicScrollAmount("left") / 5)
+                }
                 onTouchEnd={stopContinuousScroll}
                 onTouchCancel={stopContinuousScroll}
                 disabled={!canScrollLeft}
@@ -164,10 +218,14 @@ export function FormBuilderNavbar() {
 
               <button
                 onClick={scrollRight}
-                onMouseDown={() => startContinuousScroll(40)}
+                onMouseDown={() =>
+                  startContinuousScroll(getDynamicScrollAmount("right") / 5)
+                }
                 onMouseUp={stopContinuousScroll}
                 onMouseLeave={stopContinuousScroll}
-                onTouchStart={() => startContinuousScroll(40)}
+                onTouchStart={() =>
+                  startContinuousScroll(getDynamicScrollAmount("right") / 5)
+                }
                 onTouchEnd={stopContinuousScroll}
                 onTouchCancel={stopContinuousScroll}
                 disabled={!canScrollRight}
